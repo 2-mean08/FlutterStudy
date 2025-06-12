@@ -1,0 +1,278 @@
+값(데이터)와 값을 화면에 표현하는 로직 분리의 중요성
+코드의 재사용성 증가
+
+데이터와 로직이 분리되면 동일한 데이터를 사용하는 여러 화면에서 같은 로직을 재사용할 수 있습니다.
+
+한 화면의 데이터 로직을 수정해도 다른 화면에 영향을 주지 않아 효율성이 높아집니다.
+
+유지보수의 용이성
+
+UI 코드와 로직이 섞여 있으면 수정 시 관련 코드를 찾기 어렵습니다.
+
+분리하면 특정 부분만 수정하면 되므로 유지보수가 간단해집니다.
+
+테스트 가능성 향상
+
+로직이 화면과 분리되어 있으면 UI 없이도 로직을 직접 테스트할 수 있습니다.
+
+단위 테스트가 쉬워져 버그를 조기에 발견하고 해결할 수 있습니다.
+
+확장성과 유연성 향상
+
+새로운 UI 추가나 기존 UI 교체 시 데이터 로직을 건드릴 필요가 없습니다.
+
+웹 애플리케이션의 데이터를 모바일 앱에서도 재사용하기 쉽습니다.
+
+아키텍처 패턴 적용 가능
+
+값과 로직의 분리는 MVC, MVVM 등 현대 애플리케이션 아키텍처 패턴의 기초가 됩니다.
+
+코드 구조가 명확해지고 협업 시에도 유리합니다.
+
+쉽게 말해, 데이터를 화면에 표현하는 로직과 데이터를 관리하는 부분을 분리하면 코드가 더 깔끔하고 효율적이며, 이후 개발에서 더 많은 유연성과 생산성을 얻을 수 있습니다.
+
+2. 코드 구성 변경경
+dart
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+final dummyItems = [
+  'https://cdn.pixabay.com/photo/2018/11/12/18/44/thanksgiving-3811492_1280.jpg',
+  'https://cdn.pixabay.com/photo/2019/10/30/15/33/tajikistan-4589831_1280.jpg',
+  'https://cdn.pixabay.com/photo/2019/11/25/16/15/sfari-4652364_1280.jpg',
+];
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var _index = 0;
+  var _pages = [Page1(), Page2(), Page3()];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text('복잡한 UI'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add, color: Colors.black),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: _pages[_index],
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (index) {
+          setState(() {
+            _index = index;
+          });
+        },
+        currentIndex: _index,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(label: '홈', icon: Icon(Icons.home)),
+          BottomNavigationBarItem(label: '이용서비스', icon: Icon(Icons.assignment)),
+          BottomNavigationBarItem(
+            label: '내 정보',
+            icon: Icon(Icons.account_circle),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Page1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[_buildTop(), _buildMiddle(), _buildBottom()],
+    );
+  }
+
+  Widget _buildTop() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  print('택시 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('택시'),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('블랙 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('블랙'),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('바이크 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('바이크'),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('대리 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('대리'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  print('택시 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('택시'),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('블랙 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('블랙'),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('바이크 클릭');
+                },
+                child: Column(
+                  children: <Widget>[
+                    Icon(Icons.local_taxi, size: 40),
+                    Text('바이크'),
+                  ],
+                ),
+              ),
+              Opacity(
+                opacity: 0.0,
+                child: GestureDetector(
+                  onTap: () {
+                    print('택시 클릭');
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Icon(Icons.local_taxi, size: 40),
+                      Text('택시'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiddle() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 150,
+        autoPlay: true,
+      ),
+      items: dummyItems.map((url) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              margin: EdgeInsets.symmetric(horizontal: 5.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildBottom() {
+    final items = List.generate(10, (i) {
+      return ListTile(
+        leading: Icon(Icons.notifications_none),
+        title: Text('[이벤트] 이것은 공지사항입니다'),
+      );
+    });
+
+    return ListView(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: items,
+    );
+  }
+}
+
+class Page2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('이용서비스', style: TextStyle(fontSize: 40)));
+  }
+}
+
+class Page3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('내 정보', style: TextStyle(fontSize: 40)));
+  }
+}
